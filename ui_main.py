@@ -5,8 +5,9 @@ from PyQt5.QtCore import Qt
 
 # Home screen when first opening
 class HomeScreen(QWidget):
-    def __init__(self):
+    def __init__(self, stacked_widget):
         super().__init__()
+        self.stacked_widget = stacked_widget
         self.title_label = QLabel("Welcome to Manga Tracker")
         self.new_collection_button = QPushButton("+ New Collection")
         self.initUI()
@@ -44,6 +45,7 @@ class HomeScreen(QWidget):
         self.new_collection_button.clicked.connect(self.on_click)
     
     def on_click(self):
+        self.stacked_widget.setCurrentIndex(1)
         print("clicked")
 
 class NewSeriesScreen(QWidget):
@@ -66,7 +68,7 @@ class MainWindow(QMainWindow):
         self.stacked_widget = QStackedWidget()
         
         # Create screens
-        self.home_screen = HomeScreen()
+        self.home_screen = HomeScreen(self.stacked_widget)
         self.new_series_screen = NewSeriesScreen()
         
         # Add screens to stacked widget
