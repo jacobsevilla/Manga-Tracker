@@ -11,9 +11,28 @@ class HomeScreen(QWidget):
         self.initUI()
 
     def initUI(self):
+        # Layout
         vbox = QVBoxLayout()
         vbox.addWidget(self.title_label)
+        vbox.addWidget(self.new_collection_button)
         self.setLayout(vbox)
+
+        # Buttons Style Sheet
+        self.setStyleSheet('''
+            QPushButton{
+                font-size: 40px;
+                font-family: Calibri;
+                padding: 15px 75px;
+                margin: 25px;
+                border: 3px solid;
+                border-radius: 15px;
+                background-color: hsl(4, 0%, 50%);
+            }
+            QPushButton:hover{
+                background-color: hsl(4, 0%, 70%);
+            }
+        ''')
+
 
 class MainWindow(QMainWindow):
     def __init__(self):
