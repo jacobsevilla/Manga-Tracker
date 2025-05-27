@@ -1,6 +1,6 @@
 import sys
 from PyQt5.QtWidgets import (QApplication, QMainWindow, QWidget, QVBoxLayout, QGridLayout, QHBoxLayout, 
-                             QPushButton, QLabel, QStackedWidget, QLineEdit, QCheckBox)
+                             QPushButton, QLabel, QStackedWidget, QLineEdit, QCheckBox, QDesktopWidget)
 from PyQt5.QtCore import Qt
 
 # Home screen when first opening
@@ -15,12 +15,10 @@ class HomeScreen(QWidget):
         # Layout
         vbox = QVBoxLayout()
         vbox.addStretch(1) # Adds space between widgets in the layout
-        vbox.addWidget(self.title_label)
+        vbox.addWidget(self.title_label, alignment=Qt.AlignHCenter) # Set alignment
         vbox.addStretch(10)
         vbox.addWidget(self.new_collection_button)
         self.setLayout(vbox)
-
-        self.title_label.setAlignment(Qt.AlignHCenter)
 
         # Style Sheet
         self.setStyleSheet('''
@@ -47,7 +45,12 @@ class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
         self.setWindowTitle("Manga Tracker")
-        self.setGeometry(100, 100, 800, 600)
+        self.setGeometry(0, 0, 1400, 600)
+        # Center the window by screen resolution
+        qtRectangle = self.frameGeometry()
+        centerPoint = QDesktopWidget().availableGeometry().center()
+        qtRectangle.moveCenter(centerPoint)
+        self.move(qtRectangle.topLeft())
         
         # Create a stacked widget to switch between screens
         self.stacked_widget = QStackedWidget()
