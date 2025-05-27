@@ -1,28 +1,37 @@
 import sys
 from PyQt5.QtWidgets import (QApplication, QMainWindow, QWidget, QVBoxLayout, QGridLayout, QHBoxLayout, 
                              QPushButton, QLabel, QStackedWidget, QLineEdit, QCheckBox)
+from PyQt5.QtCore import Qt
 
 # Home screen when first opening
 class HomeScreen(QWidget):
     def __init__(self):
         super().__init__()
-        self.title_label = QLabel("Welcome to Manga Tracker!")
+        self.title_label = QLabel("Welcome to Manga Tracker")
         self.new_collection_button = QPushButton("+ New Collection")
         self.initUI()
 
     def initUI(self):
         # Layout
         vbox = QVBoxLayout()
+        vbox.addStretch(1) # Adds space between widgets in the layout
         vbox.addWidget(self.title_label)
+        vbox.addStretch(10)
         vbox.addWidget(self.new_collection_button)
         self.setLayout(vbox)
 
-        # Buttons Style Sheet
+        self.title_label.setAlignment(Qt.AlignHCenter)
+
+        # Style Sheet
         self.setStyleSheet('''
+            QLabel{
+                font-size: 30px;
+                font-weight: bold;
+            }               
             QPushButton{
-                font-size: 40px;
+                font-size: 20px;
                 font-family: Calibri;
-                padding: 15px 75px;
+                padding: 15px 40px;
                 margin: 25px;
                 border: 3px solid;
                 border-radius: 15px;
