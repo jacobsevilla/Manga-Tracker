@@ -69,7 +69,7 @@ class NewSeriesScreen(QWidget):
     def initUI(self):
         # Layout
         vbox = QVBoxLayout()
-        vbox.addWidget(self.title_label)
+        vbox.addWidget(self.title_label, alignment=Qt.AlignHCenter | Qt.AlignVCenter)
         grid = QGridLayout()
         vbox.addLayout(grid)
         grid.addWidget(self.name_label, 0, 0)
@@ -83,8 +83,29 @@ class NewSeriesScreen(QWidget):
         grid.addWidget(self.total_volumes_lineedit, 4, 1)
         grid.addWidget(self.price_per_volume_label, 5, 0)
         grid.addWidget(self.price_per_volume_lineedit, 5, 1)
-        grid.addWidget(self.submit, 6, 1)
+        grid.addWidget(self.submit, 6, 1, alignment=Qt.AlignRight)
         self.setLayout(vbox)
+
+        # Style Sheet
+        self.submit.setMaximumWidth(200)
+        self.setStyleSheet('''
+            QLabel{
+                font-size: 30px;
+                font-weight: bold;
+            }               
+            QPushButton{
+                font-size: 10px;
+                font-family: calibri;
+                padding: 15px 40px;
+                margin: 25px;
+                border: 3px solid;
+                border-radius: 15px;
+                background-color: hsl(136, 92%, 24%);
+            }
+            QPushButton:hover{
+                background-color: hsl(136, 92%, 44%);
+            }
+        ''')
 
 class MainWindow(QMainWindow):
     def __init__(self):
