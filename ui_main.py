@@ -40,6 +40,12 @@ class HomeScreen(QWidget):
             }
         ''')
 
+        # New Collection Button Functionality
+        self.new_collection_button.clicked.connect(self.on_click)
+    
+    def on_click(self):
+        print("clicked")
+
 
 class MainWindow(QMainWindow):
     def __init__(self):
