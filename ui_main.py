@@ -46,6 +46,10 @@ class HomeScreen(QWidget):
     def on_click(self):
         print("clicked")
 
+class NewSeriesScreen(QWidget):
+    def __init__(self):
+        super().__init__()
+        self.title_label = QLabel("Add new series")
 
 class MainWindow(QMainWindow):
     def __init__(self):
@@ -61,11 +65,13 @@ class MainWindow(QMainWindow):
         # Create a stacked widget to switch between screens
         self.stacked_widget = QStackedWidget()
         
-        # Create home screen
+        # Create screens
         self.home_screen = HomeScreen()
+        self.new_series_screen = NewSeriesScreen()
         
-        # Add home screen to stacked widget
+        # Add screens to stacked widget
         self.stacked_widget.addWidget(self.home_screen)
+        self.stacked_widget.addWidget(self.new_series_screen)
         
         # Set the stacked widget as the central widget
         self.setCentralWidget(self.stacked_widget)
