@@ -5,7 +5,7 @@ from PyQt5.QtCore import Qt
 
 # Home screen when first opening
 class HomeScreen(QWidget):
-    def __init__(self, stacked_widget):
+    def __init__(self, stacked_widget): # Pass the stacked widget to HomeScreen for button functionality
         super().__init__()
         self.stacked_widget = stacked_widget
         self.title_label = QLabel("Welcome to Manga Tracker")
@@ -42,7 +42,7 @@ class HomeScreen(QWidget):
         ''')
 
         # New Collection Button Functionality
-        self.new_collection_button.clicked.connect(self.on_click)
+        self.new_collection_button.clicked.connect(self.on_click) # Switches to the new series widget in the stacked widget
     
     def on_click(self):
         self.stacked_widget.setCurrentIndex(1)
