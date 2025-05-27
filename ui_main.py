@@ -29,7 +29,7 @@ class HomeScreen(QWidget):
             }               
             QPushButton{
                 font-size: 20px;
-                font-family: Calibri;
+                font-family: calibri;
                 padding: 15px 40px;
                 margin: 25px;
                 border: 3px solid;
@@ -52,6 +52,23 @@ class NewSeriesScreen(QWidget):
     def __init__(self):
         super().__init__()
         self.title_label = QLabel("Add new series")
+        self.name_label = QLabel("Name of Manga: ")
+        self.name_lineedit = QLineEdit(self)
+        self.artbook = QCheckBox("Check if art book or misc.")
+        self.serializing_label = QLabel("Is series done serializing? ")
+        self.volumes_owned = QCheckBox()
+        self.name_label = QLabel("Name of Manga: ")
+        self.name_label = QLabel("Name of Manga: ")
+        self.name_label = QLabel("Name of Manga: ")
+        self.submit = QPushButton("Submit")
+        self.initUI()
+    
+    def initUI(self):
+        # Layout
+        grid = QGridLayout()
+        vbox = QVBoxLayout()
+        vbox.addWidget(grid)
+        self.setLayout(vbox)
 
 class MainWindow(QMainWindow):
     def __init__(self):
