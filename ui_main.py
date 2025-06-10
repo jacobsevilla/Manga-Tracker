@@ -1,6 +1,6 @@
 import sys
 from PyQt5.QtWidgets import (QApplication, QMainWindow, QWidget, QVBoxLayout, QGridLayout, QHBoxLayout, 
-                             QPushButton, QLabel, QStackedWidget, QLineEdit, QCheckBox, QDesktopWidget)
+                             QPushButton, QLabel, QStackedWidget, QLineEdit, QCheckBox, QDesktopWidget, QTableWidget, QTableWidgetItem)
 from PyQt5.QtCore import Qt
 
 # Home screen when first opening
@@ -48,6 +48,7 @@ class HomeScreen(QWidget):
         self.stacked_widget.setCurrentIndex(1)
         print("clicked")
 
+# Screen for adding new series to collection
 class NewSeriesScreen(QWidget):
     def __init__(self):
         super().__init__()
@@ -107,6 +108,28 @@ class NewSeriesScreen(QWidget):
             }
         ''')
 
+class CollectionScreen(QWidget):
+    def __init__(self):
+        super().__init__()
+        self.title_label = QLabel("Collection Title") # should change to what user names collection
+        # Add a table to hold collection data
+        self.table = QTableWidget()
+        self.initUI()
+    
+    def initUI(self):
+        # Initialize table
+        self.table.setColumnCount(5) # set the number of columns in table
+        self.table.setHorizontalHeaderLabels(["Manga", "# of Volumes Owned", "# of Total Volumes", "$/Volume", "$/Series"]) # set column titles
+        self.populate_table()
+        # Layout
+        vbox = QVBoxLayout()
+        vbox.addWidget(self.title_label)
+        vbox.addWidget(self.table)
+        self.setLayout(vbox)
+    
+    def populate_table(self):
+        pass
+
 class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
@@ -124,10 +147,12 @@ class MainWindow(QMainWindow):
         # Create screens
         self.home_screen = HomeScreen(self.stacked_widget)
         self.new_series_screen = NewSeriesScreen()
+        self.collection_screen = CollectionScreen()
         
         # Add screens to stacked widget
         self.stacked_widget.addWidget(self.home_screen)
         self.stacked_widget.addWidget(self.new_series_screen)
+        self.stacked_widget.addWidget(self.collection_screen)
         
         # Set the stacked widget as the central widget
         self.setCentralWidget(self.stacked_widget)
