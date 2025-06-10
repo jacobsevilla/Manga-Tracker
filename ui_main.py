@@ -1,4 +1,6 @@
 import sys
+import json
+import os
 from PyQt5.QtWidgets import (QApplication, QMainWindow, QWidget, QVBoxLayout, QGridLayout, QHBoxLayout, 
                              QPushButton, QLabel, QStackedWidget, QLineEdit, QCheckBox, QDesktopWidget, 
                              QTableWidget, QTableWidgetItem, QMessageBox)
@@ -51,8 +53,9 @@ class HomeScreen(QWidget):
 
 # Screen for adding new series to collection
 class NewSeriesScreen(QWidget):
-    def __init__(self):
+    def __init__(self, main_window):
         super().__init__()
+        self.main_window = main_window
         self.title_label = QLabel("Add new series")
         self.name_label = QLabel("Name of Manga: ")
         self.name_lineedit = QLineEdit(self)
@@ -146,6 +149,9 @@ class NewSeriesScreen(QWidget):
             is_serializing = self.serializing.isChecked(),
             is_misc = self.artbook.isChecked()
         )
+        # Store manga in the dictionary using the title as the key
+        self.main_window.mangas[manga.title] = manga
+        self.main_window.save_mangas()
 
 
 class CollectionScreen(QWidget):
@@ -186,7 +192,7 @@ class MainWindow(QMainWindow):
         
         # Create screens
         self.home_screen = HomeScreen(self.stacked_widget)
-        self.new_series_screen = NewSeriesScreen()
+        self.new_series_screen = NewSeriesScreen(self)
         self.collection_screen = CollectionScreen()
         
         # Add screens to stacked widget
@@ -196,6 +202,38 @@ class MainWindow(QMainWindow):
         
         # Set the stacked widget as the central widget
         self.setCentralWidget(self.stacked_widget)
+
+        # Set dictionary to hold manga objects
+        self.mangas = {}
+        self.data_file = "mangas.json"
+        self.load_mangas()
+    
+    def save_mangas(self):
+        # Conver Manga objects to dictionaries for JSON
+        data = {title: {
+            "title": manga.title,
+            "volumes_owned": manga.volumes_owned,
+            "total_volumes": manga.total_volumes,
+            "price_per_volume": manga.price_per_volume,
+            "is_serializing": manga.is_serializing,
+            "is_misc": manga.is_misc
+        } for title, manga in self.mangas.items()}
+        with open(self.data_file, "w") as f:
+            json.dump(data, f, indent=4)    
+    
+    def load_mangas(self):
+        if os.path.exists(self.data_file):
+            with open(self.data_file, "r") as f:
+                data = json.load(f)
+                for title, info in data.items():
+                    self.mangas[title] = Manga(
+                        title=info["title"],
+                        volumes_owned=info["volumes_owned"],
+                        total_volumes=info["total_volumes"],
+                        price_per_volume=info["price_per_volume"],
+                        is_serializing=info["is_serializing"],
+                        is_misc=info["is_misc"]
+                    )
 
 def main():
     app = QApplication(sys.argv)
