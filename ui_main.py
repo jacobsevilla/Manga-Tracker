@@ -9,11 +9,13 @@ from manga import Manga
 
 # Home screen when first opening
 class HomeScreen(QWidget):
-    def __init__(self, stacked_widget): # Pass the stacked widget to HomeScreen for button functionality
+    def __init__(self, stacked_widget, main_window): # Pass the stacked widget to HomeScreen for button functionality
         super().__init__()
         self.stacked_widget = stacked_widget
+        self.main_window = main_window
         self.title_label = QLabel("Welcome to Manga Tracker")
         self.new_collection_button = QPushButton("+ New Collection")
+        self.view_collection_button = None # Will be created if there is manga data
         self.initUI()
 
     def initUI(self):
@@ -23,6 +25,11 @@ class HomeScreen(QWidget):
         vbox.addWidget(self.title_label, alignment=Qt.AlignHCenter) # Set alignment
         vbox.addStretch(10)
         vbox.addWidget(self.new_collection_button)
+        # Dynamically add the view collection button if there is manga data
+        if self.main_window.mangas:
+            self.view_collection_button = QPushButton("View Collection")
+            vbox.addWidget(self.view_collection_button)
+            self.view_collection_button.clicked.connect(self.view_collection)
         self.setLayout(vbox)
 
         # Style Sheet
@@ -50,6 +57,11 @@ class HomeScreen(QWidget):
     
     def on_click(self):
         self.stacked_widget.setCurrentIndex(1)
+    
+    def view_collection(self):
+        # Refresh the collection screen table
+        self.main_window.collection_screen.populate_table()
+        self.stacked_widget.setCurrentIndex(2)
 
 # Screen for adding new series to collection
 class NewSeriesScreen(QWidget):
@@ -152,11 +164,15 @@ class NewSeriesScreen(QWidget):
         # Store manga in the dictionary using the title as the key
         self.main_window.mangas[manga.title] = manga
         self.main_window.save_mangas()
+        # Rebuild home screen and navigate to home
+        self.main_window.home_screen.initUI() 
+        self.main_window.stacked_widget.setCurrentIndex(0) 
 
 
 class CollectionScreen(QWidget):
-    def __init__(self):
+    def __init__(self, main_window):
         super().__init__()
+        self.main_window = main_window
         self.title_label = QLabel("Collection Title") # should change to what user names collection
         # Add a table to hold collection data
         self.table = QTableWidget()
@@ -187,13 +203,18 @@ class MainWindow(QMainWindow):
         qtRectangle.moveCenter(centerPoint)
         self.move(qtRectangle.topLeft())
         
+        # Set dictionary to hold manga objects
+        self.mangas = {}
+        self.data_file = "mangas.json"
+        self.load_mangas()
+
         # Create a stacked widget to switch between screens
         self.stacked_widget = QStackedWidget()
         
         # Create screens
-        self.home_screen = HomeScreen(self.stacked_widget)
+        self.home_screen = HomeScreen(self.stacked_widget, self)
         self.new_series_screen = NewSeriesScreen(self)
-        self.collection_screen = CollectionScreen()
+        self.collection_screen = CollectionScreen(self)
         
         # Add screens to stacked widget
         self.stacked_widget.addWidget(self.home_screen)
@@ -202,11 +223,6 @@ class MainWindow(QMainWindow):
         
         # Set the stacked widget as the central widget
         self.setCentralWidget(self.stacked_widget)
-
-        # Set dictionary to hold manga objects
-        self.mangas = {}
-        self.data_file = "mangas.json"
-        self.load_mangas()
     
     def save_mangas(self):
         # Conver Manga objects to dictionaries for JSON

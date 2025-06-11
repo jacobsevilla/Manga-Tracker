@@ -1,0 +1,10 @@
+{
+    "Phantom Blood": {
+        "title": "Phantom Blood",
+        "volumes_owned": 4,
+        "total_volumes": 4,
+        "price_per_volume": 19.99,
+        "is_serializing": true,
+        "is_misc": false
+    }
+}
