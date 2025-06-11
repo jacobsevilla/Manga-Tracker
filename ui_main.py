@@ -164,16 +164,18 @@ class NewSeriesScreen(QWidget):
         # Store manga in the dictionary using the title as the key
         self.main_window.mangas[manga.title] = manga
         self.main_window.save_mangas()
-        # Rebuild home screen and navigate to home
-        self.main_window.home_screen.initUI() 
-        self.main_window.stacked_widget.setCurrentIndex(0) 
+        # Rebuild collection screen and navigate to collection
+        self.main_window.collection_screen.initUI() 
+        self.main_window.stacked_widget.setCurrentIndex(2) 
 
 
 class CollectionScreen(QWidget):
-    def __init__(self, main_window):
+    def __init__(self, stacked_widget, main_window):
         super().__init__()
+        self.stacked_widget = stacked_widget
         self.main_window = main_window
-        self.title_label = QLabel("Collection Title") # should change to what user names collection
+        self.title_label = QLabel("My Collection")
+        self.new_series_button = QPushButton("+ Add New Series")
         # Add a table to hold collection data
         self.table = QTableWidget()
         self.initUI()
@@ -186,6 +188,8 @@ class CollectionScreen(QWidget):
         # Layout
         vbox = QVBoxLayout()
         vbox.addWidget(self.title_label)
+        vbox.addWidget(self.new_series_button)
+        self.new_series_button.clicked.connect(self.on_click)
         vbox.addWidget(self.table)
         self.setLayout(vbox)
     
@@ -233,6 +237,9 @@ class CollectionScreen(QWidget):
         # Make columns resize
         self.table.resizeColumnsToContents()
 
+    def on_click(self):
+        self.stacked_widget.setCurrentIndex(1)
+
 class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
@@ -255,7 +262,7 @@ class MainWindow(QMainWindow):
         # Create screens
         self.home_screen = HomeScreen(self.stacked_widget, self)
         self.new_series_screen = NewSeriesScreen(self)
-        self.collection_screen = CollectionScreen(self)
+        self.collection_screen = CollectionScreen(self.stacked_widget, self)
         
         # Add screens to stacked widget
         self.stacked_widget.addWidget(self.home_screen)
