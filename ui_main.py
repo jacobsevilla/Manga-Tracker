@@ -207,8 +207,31 @@ class CollectionScreen(QWidget):
             self.table.setItem(row, 2, total_volumes_item)
             self.table.setItem(row, 3, price_per_volume_item)
             self.table.setItem(row, 4, total_price_item)
+        # Add summary row for totals
+        # Find row count
+        row_count = self.table.rowCount()
+        # Insert 3 rows, 1 blank, 1 for titles (row_count + 1), 1 for totals (row_count + 2)
+        self.table.insertRow(row_count)
+        self.table.insertRow(row_count)
+        self.table.insertRow(row_count)
+        # Set titles
+        total_vols_title = QTableWidgetItem("Total # of Volumes")
+        total_series_title = QTableWidgetItem("Total # of Series'")
+        total_money_title = QTableWidgetItem("Total $ of Collection")
+        # Set Totals
+        total_series = QTableWidgetItem(str(Manga.get_total_series_collection_count()))
+        total_volumes = QTableWidgetItem(str(Manga.get_total_volume_collection_count()))
+        total_price = QTableWidgetItem(f"${Manga.get_total_collection_price():.2f}")    
+        # Insert Titles
+        self.table.setItem(row_count + 1, 0, total_series_title)
+        self.table.setItem(row_count + 1, 2, total_vols_title)
+        self.table.setItem(row_count + 1, 4, total_money_title)
+        # Insert Totals
+        self.table.setItem(row_count + 2, 0, total_series)
+        self.table.setItem(row_count + 2, 2, total_volumes)
+        self.table.setItem(row_count + 2, 4, total_price)
         # Make columns resize
-        self.table.resizeColumnsToContents
+        self.table.resizeColumnsToContents()
 
 class MainWindow(QMainWindow):
     def __init__(self):
