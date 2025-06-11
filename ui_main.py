@@ -135,8 +135,6 @@ class NewSeriesScreen(QWidget):
         volumes_owned_text = self.volumes_owned_lineedit.text()
         total_volumes_text = self.total_volumes_lineedit.text()
         price_per_volume_text = self.price_per_volume_lineedit.text()
-        is_artbook = self.artbook.isChecked()
-        is_serializing = self.serializing.isChecked()
         # Check all inputs are filled out
         if not name or not volumes_owned_text or not total_volumes_text or not price_per_volume_text:
             # Throw error
