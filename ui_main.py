@@ -25,11 +25,12 @@ class HomeScreen(QWidget):
         vbox.addWidget(self.title_label, alignment=Qt.AlignHCenter) # Set alignment
         vbox.addStretch(10)
         vbox.addWidget(self.new_collection_button)
-        # Dynamically add the view collection button if there is manga data
+        # Dynamically add the view collection button and hide the new collection button if there is manga data
         if self.main_window.mangas:
             self.view_collection_button = QPushButton("View Collection")
             vbox.addWidget(self.view_collection_button)
             self.view_collection_button.clicked.connect(self.view_collection)
+            vbox.removeWidget(self.new_collection_button)
         self.setLayout(vbox)
 
         # Style Sheet
@@ -76,7 +77,7 @@ class NewSeriesScreen(QWidget):
         self.serializing = QCheckBox()
         self.volumes_owned_label = QLabel("# of volumes owned: ")
         self.volumes_owned_lineedit = QLineEdit(self)
-        self.total_volumes_label = QLabel("# of total volumes: ")
+        self.total_volumes_label = QLabel("# of total volumes available: ")
         self.total_volumes_lineedit = QLineEdit(self)
         self.price_per_volume_label = QLabel("$ per volume: ")
         self.price_per_volume_lineedit = QLineEdit(self)
@@ -163,7 +164,7 @@ class NewSeriesScreen(QWidget):
         self.main_window.mangas[manga.title] = manga
         self.main_window.save_mangas()
         # Rebuild collection screen and navigate to collection
-        self.main_window.collection_screen.initUI() 
+        self.main_window.collection_screen.populate_table() 
         self.main_window.stacked_widget.setCurrentIndex(2) 
 
 
@@ -181,7 +182,7 @@ class CollectionScreen(QWidget):
     def initUI(self):
         # Initialize table
         self.table.setColumnCount(5) # set the number of columns in table
-        self.table.setHorizontalHeaderLabels(["Manga", "# of Volumes Owned", "# of Total Volumes", "$/Volume", "$/Series"]) # set column titles
+        self.table.setHorizontalHeaderLabels(["Manga", "# of Volumes Owned", "# of Total Volumes Available", "$/Volume", "$/Series"]) # set column titles
         self.populate_table()
         # Layout
         vbox = QVBoxLayout()
