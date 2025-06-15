@@ -32,9 +32,9 @@ class Manga:
     def collection_status(self):
         if self.is_misc:
             return "Art books etc."
-        elif self.volumes_owned == self.total_volumes and not self.is_serializing:
+        elif self.volumes_owned == self.total_volumes and self.is_serializing:
             return "Completed"
-        elif self. volumes_owned < self.total_volumes and not self.is_serializing:
+        elif self. volumes_owned < self.total_volumes and self.is_serializing:
             return "Incomplete"
         else:
             return "Ongoing"

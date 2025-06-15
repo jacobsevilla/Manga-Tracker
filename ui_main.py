@@ -163,10 +163,19 @@ class NewSeriesScreen(QWidget):
         # Store manga in the dictionary using the title as the key
         self.main_window.mangas[manga.title] = manga
         self.main_window.save_mangas()
+        self.clear_inputs()
         # Rebuild collection screen and navigate to collection
         self.main_window.collection_screen.populate_table() 
         self.main_window.stacked_widget.setCurrentIndex(2) 
 
+    # Clear all inputs for next manga to be added
+    def clear_inputs(self):
+        self.name_lineedit.clear()
+        self.artbook.setChecked(False)
+        self.serializing.setChecked(False)
+        self.volumes_owned_lineedit.clear()
+        self.total_volumes_lineedit.clear()
+        self.price_per_volume_lineedit.clear()
 
 class CollectionScreen(QWidget):
     def __init__(self, stacked_widget, main_window):
@@ -279,7 +288,8 @@ class MainWindow(QMainWindow):
             "total_volumes": manga.total_volumes,
             "price_per_volume": manga.price_per_volume,
             "is_serializing": manga.is_serializing,
-            "is_misc": manga.is_misc
+            "is_misc": manga.is_misc,
+            "collection_status": manga.collection_status()
         } for title, manga in self.mangas.items()}
         with open(self.data_file, "w") as f:
             json.dump(data, f, indent=4)    
