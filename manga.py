@@ -34,7 +34,7 @@ class Manga:
             return 3 # Art books etc.
         elif self.volumes_owned == self.total_volumes and self.is_serializing:
             return 0 # Completed
-        elif self. volumes_owned < self.total_volumes and self.is_serializing:
+        elif self.volumes_owned < self.total_volumes and self.is_serializing:
             return 2 # Incomplete
         else:
             return 1 # Ongoing
