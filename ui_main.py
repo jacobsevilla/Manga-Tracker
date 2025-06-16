@@ -209,26 +209,51 @@ class CollectionScreen(QWidget):
         # Sort manga list by collection status
         manga_list = list(mangas.values())
         manga_list.sort(key=lambda manga: manga.collection_status())
+        # Calculate total rows needed (manga + headers + summary)
+        # Count how many unique statuses we have for headers
+        unique_statuses = set(manga.collection_status() for manga in manga_list)
+        total_rows = len(manga_list) + len(unique_statuses) + 3  # +3 for summary rows
+        self.table.setRowCount(total_rows)
+        
+        # Dictionary to map status numbers to readable names
+        status_names = {
+            0: "Completed",
+            1: "Ongoing", 
+            2: "Incomplete",
+            3: "Art books etc.",
+        }
+
+        current_row = 0
+        current_status = None
         # Loop through mangas and fill rows
-        for row, manga in enumerate(manga_list):
+        for manga in manga_list:
+            manga_status = manga.collection_status()
+            # Add header when status changes
+            if current_status != manga_status:
+                # Create header row
+                header_item = QTableWidgetItem(status_names.get(manga_status, f"Status {manga_status}")) 
+                # Set header across all columns (span the row)
+                self.table.setItem(current_row, 0, header_item)
+                for col in range(1, 5):  # Columns 1-4
+                    empty_header = QTableWidgetItem("")
+                    self.table.setItem(current_row, col, empty_header)
+                current_status = manga_status
+                current_row += 1
+            # Add manga data to table    
             title_item = QTableWidgetItem(manga.title)
             volumes_owned_item = QTableWidgetItem(str(manga.volumes_owned))
             total_volumes_item = QTableWidgetItem(str(manga.total_volumes))
             price_per_volume_item = QTableWidgetItem(f"${manga.price_per_volume:.2f}")
             total_price_item = QTableWidgetItem(f"${manga.total_series_price:.2f}")
 
-            self.table.setItem(row, 0, title_item)
-            self.table.setItem(row, 1, volumes_owned_item)
-            self.table.setItem(row, 2, total_volumes_item)
-            self.table.setItem(row, 3, price_per_volume_item)
-            self.table.setItem(row, 4, total_price_item)
+            self.table.setItem(current_row, 0, title_item)
+            self.table.setItem(current_row, 1, volumes_owned_item)
+            self.table.setItem(current_row, 2, total_volumes_item)
+            self.table.setItem(current_row, 3, price_per_volume_item)
+            self.table.setItem(current_row, 4, total_price_item)
+            current_row += 1
         # Add summary row for totals
-        # Find row count
-        row_count = self.table.rowCount()
-        # Insert 3 rows, 1 blank, 1 for titles (row_count + 1), 1 for totals (row_count + 2)
-        self.table.insertRow(row_count)
-        self.table.insertRow(row_count)
-        self.table.insertRow(row_count)
+        current_row += 1
         # Set titles
         total_vols_title = QTableWidgetItem("Total # of Volumes")
         total_series_title = QTableWidgetItem("Total # of Series'")
@@ -238,13 +263,13 @@ class CollectionScreen(QWidget):
         total_volumes = QTableWidgetItem(str(Manga.get_total_volume_collection_count()))
         total_price = QTableWidgetItem(f"${Manga.get_total_collection_price():.2f}")    
         # Insert Titles
-        self.table.setItem(row_count + 1, 0, total_series_title)
-        self.table.setItem(row_count + 1, 2, total_vols_title)
-        self.table.setItem(row_count + 1, 4, total_money_title)
+        self.table.setItem(current_row, 0, total_series_title)
+        self.table.setItem(current_row, 2, total_vols_title)
+        self.table.setItem(current_row, 4, total_money_title)
         # Insert Totals
-        self.table.setItem(row_count + 2, 0, total_series)
-        self.table.setItem(row_count + 2, 2, total_volumes)
-        self.table.setItem(row_count + 2, 4, total_price)
+        self.table.setItem(current_row + 1, 0, total_series)
+        self.table.setItem(current_row + 1, 2, total_volumes)
+        self.table.setItem(current_row + 1, 4, total_price)
         # Make columns resize
         self.table.resizeColumnsToContents()
 
