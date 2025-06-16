@@ -205,6 +205,7 @@ class CollectionScreen(QWidget):
         mangas = self.main_window.mangas
         # Clear table
         self.table.clearContents()
+        self.table.verticalHeader().setVisible(False)
         self.table.setRowCount(len(mangas))     
         # Sort manga list by collection status
         manga_list = list(mangas.values())
@@ -212,7 +213,7 @@ class CollectionScreen(QWidget):
         # Calculate total rows needed (manga + headers + summary)
         # Count how many unique statuses we have for headers
         unique_statuses = set(manga.collection_status() for manga in manga_list)
-        total_rows = len(manga_list) + len(unique_statuses) + 3  # +3 for summary rows
+        total_rows = len(manga_list) + 2 * len(unique_statuses) + 3  # 2 * unique statuses for header and blank row +3 for summary rows
         self.table.setRowCount(total_rows)
         
         # Dictionary to map status numbers to readable names
@@ -230,6 +231,8 @@ class CollectionScreen(QWidget):
             manga_status = manga.collection_status()
             # Add header when status changes
             if current_status != manga_status:
+                # Blank row
+                current_row += 1
                 # Create header row
                 header_item = QTableWidgetItem(status_names.get(manga_status, f"Status {manga_status}")) 
                 # Set header across all columns (span the row)
