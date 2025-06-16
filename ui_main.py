@@ -131,7 +131,6 @@ class NewSeriesScreen(QWidget):
 
     def on_click(self):
         # Create a Manga object based on what the user inputted when pressing submit
-        print("clicked")
         # Set all arguments for Manga object to user input
         name = self.name_lineedit.text()
         volumes_owned_text = self.volumes_owned_lineedit.text()
@@ -140,7 +139,6 @@ class NewSeriesScreen(QWidget):
         # Check all inputs are filled out
         if not name or not volumes_owned_text or not total_volumes_text or not price_per_volume_text:
             # Throw error
-            print("Error: You have not filled out all requirements")
             QMessageBox.warning(self, "Missing Fields", "Please fill out all required fields")
             return
         # Convert data types plus error handling
@@ -150,7 +148,6 @@ class NewSeriesScreen(QWidget):
             price_per_volume = float(self.price_per_volume_lineedit.text())
         except ValueError:
             QMessageBox.warning(self, "Invalid Input", "Make sure volumes are integers and price is a number.")
-            print("Value error")
             return
         # Create manga object
         manga = Manga(
