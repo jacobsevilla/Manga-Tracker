@@ -5,6 +5,7 @@ from PyQt5.QtWidgets import (QApplication, QMainWindow, QWidget, QVBoxLayout, QG
                              QPushButton, QLabel, QStackedWidget, QLineEdit, QCheckBox, QDesktopWidget, 
                              QTableWidget, QTableWidgetItem, QMessageBox)
 from PyQt5.QtCore import Qt
+from PyQt5 import QtGui
 from manga import Manga
 
 # Home screen when first opening
@@ -236,9 +237,22 @@ class CollectionScreen(QWidget):
                 # Create header row
                 header_item = QTableWidgetItem(status_names.get(manga_status, f"Status {manga_status}")) 
                 # Set header across all columns (span the row)
-                self.table.setItem(current_row, 0, header_item)
-                for col in range(1, 5):  # Columns 1-4
+                self.table.setItem(current_row, 2, header_item)
+                for col in [0, 1, 3, 4]:  # Columns 0-4 skipping 2
                     empty_header = QTableWidgetItem("")
+                    # Change background color depending on collection status
+                    if manga_status == 0: # Complete = Green
+                        header_item.setBackground(QtGui.QColor(13, 128, 26))
+                        empty_header.setBackground(QtGui.QColor(13, 128, 26))
+                    elif manga_status == 1: # Ongoing = Orange
+                        header_item.setBackground(QtGui.QColor(247, 155, 25))
+                        empty_header.setBackground(QtGui.QColor(247, 155, 25))
+                    elif manga_status == 2: # Incomplete = Red
+                        header_item.setBackground(QtGui.QColor(166, 15, 15))
+                        empty_header.setBackground(QtGui.QColor(166, 15, 15))                    
+                    elif manga_status == 3: # Artbook = Blue
+                        header_item.setBackground(QtGui.QColor(8, 125, 209))
+                        empty_header.setBackground(QtGui.QColor(8, 125, 209))
                     self.table.setItem(current_row, col, empty_header)
                 current_status = manga_status
                 current_row += 1
