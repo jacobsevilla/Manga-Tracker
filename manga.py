@@ -31,13 +31,13 @@ class Manga:
     
     def collection_status(self):
         if self.is_misc:
-            return "Art books etc."
+            return 3 # Art books etc.
         elif self.volumes_owned == self.total_volumes and self.is_serializing:
-            return "Completed"
+            return 0 # Completed
         elif self. volumes_owned < self.total_volumes and self.is_serializing:
-            return "Incomplete"
+            return 2 # Incomplete
         else:
-            return "Ongoing"
+            return 1 # Ongoing
     
     @classmethod # ** classmethod
     def get_total_series_collection_count(cls):

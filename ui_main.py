@@ -205,14 +205,17 @@ class CollectionScreen(QWidget):
         mangas = self.main_window.mangas
         # Clear table
         self.table.clearContents()
-        self.table.setRowCount(len(mangas))
+        self.table.setRowCount(len(mangas))     
+        # Sort manga list by collection status
+        manga_list = list(mangas.values())
+        manga_list.sort(key=lambda manga: manga.collection_status())
         # Loop through mangas and fill rows
-        for row, manga in enumerate(mangas.values()):
+        for row, manga in enumerate(manga_list):
             title_item = QTableWidgetItem(manga.title)
             volumes_owned_item = QTableWidgetItem(str(manga.volumes_owned))
             total_volumes_item = QTableWidgetItem(str(manga.total_volumes))
             price_per_volume_item = QTableWidgetItem(f"${manga.price_per_volume:.2f}")
-            total_price_item = QTableWidgetItem(f"${manga.total_series_price:.2f}")     
+            total_price_item = QTableWidgetItem(f"${manga.total_series_price:.2f}")
 
             self.table.setItem(row, 0, title_item)
             self.table.setItem(row, 1, volumes_owned_item)
