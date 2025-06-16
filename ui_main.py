@@ -230,10 +230,12 @@ class CollectionScreen(QWidget):
         # Loop through mangas and fill rows
         for manga in manga_list:
             manga_status = manga.collection_status()
+
             # Add header when status changes
             if current_status != manga_status:
-                # Blank row
-                current_row += 1
+                # Blank row except the first status
+                if current_row != 0:
+                    current_row += 1
                 # Create header row
                 header_item = QTableWidgetItem(status_names.get(manga_status, f"Status {manga_status}")) 
                 # Set header across all columns (span the row)
@@ -256,6 +258,7 @@ class CollectionScreen(QWidget):
                     self.table.setItem(current_row, col, empty_header)
                 current_status = manga_status
                 current_row += 1
+
             # Add manga data to table    
             title_item = QTableWidgetItem(manga.title)
             volumes_owned_item = QTableWidgetItem(str(manga.volumes_owned))
