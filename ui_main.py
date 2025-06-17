@@ -237,7 +237,9 @@ class CollectionScreen(QWidget):
                 header_item = QTableWidgetItem(status_names.get(manga_status, f"Status {manga_status}")) 
                 # Set header across all columns (span the row)
                 self.table.setItem(current_row, 2, header_item)
-                for col in [0, 1, 3, 4]:  # Columns 0-4 skipping 2
+                for col in range(5):  # Columns 0-4 skipping 2
+                    if col == 2:
+                        continue
                     empty_header = QTableWidgetItem("")
                     # Change background color depending on collection status
                     if manga_status == 0: # Complete = Green
